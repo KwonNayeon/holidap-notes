@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>워킹홀리데이 준비 타임라인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 40px 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff6b6b, #4ecdc4);
+            transform: translateX(-50%);
+        }
+
+        .phase {
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .phase-marker {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b6b, #ffa500);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .phase-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .phase-left, .phase-right {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .phase:nth-child(even) .phase-left {
+            order: 2;
+        }
+
+        .phase:nth-child(even) .phase-right {
+            order: 1;
+        }
+
+        .phase-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s ease;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .phase-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .korea-phase .phase-title {
+            color: #ff6b6b;
+        }
+
+        .canada-phase .phase-title {
+            color: #4ecdc4;
+        }
+
+        .category {
+            margin-bottom: 20px;
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+
+        .korea-phase .category-title {
+            border-left-color: #ff6b6b;
+        }
+
+        .canada-phase .category-title {
+            border-left-color: #4ecdc4;
+        }
+
+        .task-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .task-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: #fafbfc;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .task-item:hover {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+
+        .empty-space {
+            height: 100px;
+        }
+
+        .phase-description {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+        }
+
+        .korea-phase .phase-description {
+            border-left-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .canada-phase .phase-description {
+            border-left-color: #4ecdc4;
+            background: #f0fffe;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .phase-marker {
+                left: 30px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .phase-content {
+                flex-direction: column;
+                margin-left: 80px;
+            }
+            
+            .phase:nth-child(even) .phase-left,
+            .phase:nth-child(even) .phase-right {
+                order: initial;
+            }
+            
+            .empty-space {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🇨🇦 워킹홀리데이 준비 가이드</h1>
+            <p>출국 전 준비부터 현지 정착까지 단계별 가이드</p>
+        </div>
+
+        <div class="timeline">
+            <!-- 한국 출국 전 준비 -->
+            <div class="phase korea-phase">
+                <div class="phase-marker">🇰🇷</div>
+                <div class="phase-content">
+                    <div class="phase-left">
+                        <div class="phase-card">
+                            <div class="phase-title">출국 전 준비</div>
+                            <div class="phase-description">
+                                출국 전 준비해야 할 사항들입니다.
+                            </div>
+                            
+                            <div class="category">
+                                <div class="category-title">📋 서류</div>
+                                <ul class="task-list">
+                                    <li class="task-item">캐나다 입국 필수 서류 가이드</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">✈️ 항공</div>
+                                <ul class="task-list">
+                                    <li class="task-item">워킹홀리데이 수화물 준비 가이드</li>
+                                    <li class="task-item">편도 항공권 예매 가이드</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">🏥 건강</div>
+                                <ul class="task-list">
+                                    <li class="task-item">워킹홀리데이 보험 가이드</li>
+                                    <li class="task-item">출국 전 건강검진 체크리스트</li>
+                                    <li class="task-item">출국 전 예방접종 가이드</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-right">
+                        <div class="phase-card">
+                            <div class="category">
+                                <div class="category-title">📱 통신</div>
+                                <ul class="task-list">
+                                    <li class="task-item">한국번호 알뜰폰으로 바꾸기</li>
+                                    <li class="task-item">현지 유심 신청 및 사용</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">💳 금융</div>
+                                <ul class="task-list">
+                                    <li class="task-item">트래블전용 카드 / ATM 정보</li>
+                                    <li class="task-item">나라간 송금하기</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">🏠 주거</div>
+                                <ul class="task-list">
+                                    <li class="task-item">임시숙소</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">🏠 생활</div>
+                                <ul class="task-list">
+                                    <li class="task-item">해외 체류 중 한국 본인인증 가이드</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 캐나다 초기 정착 -->
+            <div class="phase canada-phase">
+                <div class="phase-marker">🛬</div>
+                <div class="phase-content">
+                    <div class="phase-left">
+                        <div class="phase-card">
+                            <div class="phase-title">캐나다 초기 정착하기</div>
+                            <div class="phase-description">
+                                캐나다 초기 정착 시 필요한 정보들입니다.
+                            </div>
+                            
+                            <div class="category">
+                                <div class="category-title">📋 서류</div>
+                                <ul class="task-list">
+                                    <li class="task-item">해외 체류 신고</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">🏠 주거</div>
+                                <ul class="task-list">
+                                    <li class="task-item">집 구하는 방법 및 플랫폼 소개</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">🚌 생활</div>
+                                <ul class="task-list">
+                                    <li class="task-item">대중교통 이용하기</li>
+                                    <li class="task-item">캐나다 유용한 앱 안내</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-right">
+                        <div class="empty-space"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 캐나다 생활 기반 구축 -->
+            <div class="phase canada-phase">
+                <div class="phase-marker">🏛️</div>
+                <div class="phase-content">
+                    <div class="phase-left">
+                        <div class="empty-space"></div>
+                    </div>
+                    <div class="phase-right">
+                        <div class="phase-card">
+                            <div class="phase-title">생활 기반 구축하기</div>
+                            <div class="phase-description">
+                                캐나다 생활 기반 구축 시 필요한 정보들입니다.
+                            </div>
+                            
+                            <div class="category">
+                                <div class="category-title">🆔 신분증</div>
+                                <ul class="task-list">
+                                    <li class="task-item">신분증 만들기</li>
+                                    <li class="task-item">운전면허증 사용 및 교환</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">💳 금융</div>
+                                <ul class="task-list">
+                                    <li class="task-item">현지 은행 계좌 오픈</li>
+                                    <li class="task-item">은행 계좌 혜택</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">🏥 의료</div>
+                                <ul class="task-list">
+                                    <li class="task-item">캐나다 의료 시스템</li>
+                                    <li class="task-item">캐나다 주정부 의료보험</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">🔢 생활</div>
+                                <ul class="task-list">
+                                    <li class="task-item">신넘버 발급받기</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 캐나다 취업 -->
+            <div class="phase canada-phase">
+                <div class="phase-marker">💼</div>
+                <div class="phase-content">
+                    <div class="phase-left">
+                        <div class="phase-card">
+                            <div class="phase-title">취업하기</div>
+                            <div class="phase-description">
+                                현지 취업 시 필요한 정보들입니다.
+                            </div>
+                            
+                            <div class="category">
+                                <div class="category-title">📝 구직</div>
+                                <ul class="task-list">
+                                    <li class="task-item">워홀러를 위한 레주메 작성 가이드</li>
+                                    <li class="task-item">레주메 출력 가이드</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">💼 취업</div>
+                                <ul class="task-list">
+                                    <li class="task-item">현지 구직 플랫폼 가이드</li>
+                                    <li class="task-item">서버/바텐더 자격증</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="phase-right">
+                        <div class="phase-card">
+                            <div class="category">
+                                <div class="category-title">🛍️ 생활</div>
+                                <ul class="task-list">
+                                    <li class="task-item">현지 한인마트 정보</li>
+                                    <li class="task-item">국제 택배 보내기</li>
+                                    <li class="task-item">캐나다 생활에 필요한 주요 기관 안내</li>
+                                </ul>
+                            </div>
+
+                            <div class="category">
+                                <div class="category-title">⚠️ 안전</div>
+                                <ul class="task-list">
+                                    <li class="task-item">캐나다에서 주의해야 할 주요 사기 유형 가이드</li>
+                                    <li class="task-item">캐나다 긴급 상황 대응 가이드</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 태스크 아이템 클릭 이벤트
+        document.querySelectorAll('.task-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.backgroundColor = '#c8e6c9';
+                this.style.borderColor = '#4caf50';
+                this.style.transform = 'scale(0.98)';
+                
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 100);
+            });
+        });
+
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.phase-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
